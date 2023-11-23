@@ -1,63 +1,45 @@
-// ConsoleApplication1.cpp : This file contains the 'main' function. Program execution begins and ends there.
-//
-
 #include <iostream>
-#include <string>
-using namespace std;
+#include <vector>
+#include <memory>
+#include "Animal.h"
+#include "Cow.h"
+#include "FrisianCow.h"
+#include "Sheep.h"
+
+
 int main()
 {
-    string input = "";
-    string postInput = "";
-    bool encrypt = 0 ;
-    int key = 0 ;
-    const int A = 65;
-    const int Z = 90;
-    cout << "Please input a word, encrypt boolean, and key integer value\n";
-    cin >> input >> encrypt >> key;
-    while (key > 25)
-    {
-        cout << "Key value cannot exceed 25. Please enter key value";
-        cin >> key;
-    }
+	std::vector<std::unique_ptr<Animal>> container; // Create animals container
 
+	int animalAmount;
+	int choice;
+	std::cout << "Enter the amount of animals you want to add" << std::endl;
+	std::cin >> animalAmount;
 
-    if (encrypt == 1)
-    {
-        for (char c: input)
-        {
-            if ((c + key) > 122) 
-            {
-            c -= 26;
-            }
-            postInput += (c += key);
-        }
-    }
-    
-    else if (encrypt == 0)
-    {
-        for (char c: input)
-        {
-            if ((c - key) < 97)
-            {
-            c += 26;
-            }
-            postInput += (c -= key);
-        }
-    }
-    else
-    {
-        // Do nothing
-    }
-    cout << postInput;
+	for (int i = 0; i < animalAmount; ++i) // For each animal ask user to choose a type
+	{
+		std::cout << "Choose an animal to add \n[1] For Sheep \n[2] For cow\n[3] For Frisian cow" << std::endl;
+		std::cin >> choice; 
+		switch (choice) {
+		case 1: // Add a sheep
+			container.push_back(std::make_unique<Sheep>());
+			break;
+		case 2: // Add a cow
+			container.push_back(std::make_unique<Cow>());
+			break;
+		case 3: // Add a frisian cow
+			container.push_back(std::make_unique<Frisian>());
+			break;
+		default: // If invalid input
+			std::cout << "Invalid choice, please try again\n";
+			animalAmount--; // Decrement to retry the iteration
+		}
+	}
+
+	for (auto& animal : container) // Make each animal in container speak
+	{
+		animal->speak();
+	}
+	
+
 }
-
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
